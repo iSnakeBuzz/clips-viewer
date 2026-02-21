@@ -23,7 +23,7 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
-    const [muted, setMuted] = useState(false);
+    const [muted, setMuted] = useState(true);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [controlsVisible, setControlsVisible] = useState(true);
 
@@ -55,6 +55,26 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
         return () =>
             document.removeEventListener('fullscreenchange', onFsChange);
     }, []);
+
+    const forceAutoplay = useCallback(() => {
+        const v = videoRef.current;
+        if (!v) return;
+        v.muted = true;
+        v.defaultMuted = true;
+        v.volume = volume;
+        setMuted(true);
+        v.play().catch(() => {});
+    }, [volume]);
+
+    useEffect(() => {
+        const v = videoRef.current;
+        if (!v) return;
+        forceAutoplay();
+
+        if (v.readyState < 2) {
+            v.addEventListener('canplay', forceAutoplay, { once: true });
+        }
+    }, [src, forceAutoplay]);
 
     const togglePlay = useCallback(() => {
         const v = videoRef.current;
@@ -108,6 +128,8 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
                 autoPlay
                 loop
                 playsInline
+                muted={muted}
+                onCanPlay={forceAutoplay}
                 className='block max-w-full cursor-pointer'
                 style={{ maxHeight: isFullscreen ? '100vh' : '70vh' }}
                 onClick={togglePlay}
@@ -120,7 +142,7 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
                         width: v.videoWidth,
                         height: v.videoHeight,
                     });
-                    v.play().catch(() => {});
+                    forceAutoplay();
                 }}
                 onTimeUpdate={() => {
                     const v = videoRef.current;
