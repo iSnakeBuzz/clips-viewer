@@ -180,7 +180,7 @@ export default function MediaPreview() {
 
                 {type === 'audio' && (
                     <div className='flex flex-col items-center gap-6'>
-                        <div className='w-14 h-14 rounded-2xl border border-white/[0.07] bg-white/[0.03] flex items-center justify-center'>
+                        <div className='w-14 h-14 rounded-2xl border border-white/[0.07] bg-white/3 flex items-center justify-center'>
                             <MusicIcon />
                         </div>
                         <audio
@@ -199,7 +199,7 @@ export default function MediaPreview() {
             </main>
 
             {/* ── Bottom bar ── */}
-            <footer className='border-t border-white/[0.06] px-5 py-3 flex items-center gap-4'>
+            <footer className='border-t border-white/6 px-5 py-3 flex items-center gap-4'>
                 {/* File info */}
                 <div className='flex-1 min-w-0'>
                     <p className='text-sm font-medium text-white/75 truncate leading-snug'>
@@ -220,7 +220,7 @@ export default function MediaPreview() {
                         className={`flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-md transition-all duration-150 cursor-pointer ${
                             copied
                                 ? 'text-emerald-400 bg-emerald-400/10'
-                                : 'text-white/35 hover:text-white/65 hover:bg-white/[0.06]'
+                                : 'text-white/35 hover:text-white/65 hover:bg-white/6'
                         }`}
                     >
                         {copied ? <CheckIcon /> : <CopyIcon />}
@@ -232,7 +232,7 @@ export default function MediaPreview() {
                         target='_blank'
                         rel='noreferrer'
                         title='Open raw file'
-                        className='flex items-center gap-1.5 text-[11px] font-medium text-white/35 hover:text-white/65 hover:bg-white/[0.06] px-2.5 py-1.5 rounded-md transition-all duration-150'
+                        className='flex items-center gap-1.5 text-[11px] font-medium text-white/35 hover:text-white/65 hover:bg-white/6 px-2.5 py-1.5 rounded-md transition-all duration-150'
                     >
                         <ExternalIcon />
                         Raw
