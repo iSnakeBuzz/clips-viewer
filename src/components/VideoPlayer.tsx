@@ -111,12 +111,6 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
                 className='block max-w-full cursor-pointer'
                 style={{ maxHeight: isFullscreen ? '100vh' : '70vh' }}
                 onClick={togglePlay}
-                onEnded={() => {
-                    const v = videoRef.current;
-                    if (!v) return;
-                    v.currentTime = 0;
-                    v.play();
-                }}
                 onLoadedMetadata={() => {
                     const v = videoRef.current;
                     if (!v) return;
