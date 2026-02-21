@@ -78,6 +78,10 @@ function buildOGResponse(pageUrl: string, filename: string): Response {
     const safePage = esc(pageUrl);
     const safeMime = esc(mime);
 
+    const siteTitle = 'Snake Media Share';
+    const siteDescription = 'Preview of the media shared by Snake <3';
+    const siteLogo = 'https://snake.rip/favicon.svg';
+
     const metas = {
         video: `
   <meta property="og:type"             content="video.other" />
@@ -90,30 +94,50 @@ function buildOGResponse(pageUrl: string, filename: string): Response {
   <meta name="twitter:card"            content="player" />
   <meta name="twitter:player"          content="${safePage}" />
   <meta name="twitter:player:width"    content="1280" />
-  <meta name="twitter:player:height"   content="720" />`,
+  <meta name="twitter:player:height"   content="720" />
+  <meta property="og:image:alt"        content="${safeName}" />`,
 
         image: `
   <meta property="og:type"              content="website" />
   <meta property="og:image"            content="${safeMedia}" />
   <meta property="og:image:secure_url" content="${safeMedia}" />
+  <meta property="og:image:alt"        content="${safeName}" />
   <meta name="twitter:card"            content="summary_large_image" />
   <meta name="twitter:image"           content="${safeMedia}" />`,
 
         audio: `
   <meta property="og:type"             content="music.song" />
   <meta property="og:audio"            content="${safeMedia}" />
-  <meta property="og:audio:type"       content="${safeMime}" />`,
+  <meta property="og:audio:type"       content="${safeMime}" />
+  <meta property="og:image"            content="${siteLogo}" />
+  <meta property="og:image:alt"        content="${siteTitle} logo" />
+  <meta name="twitter:card"            content="summary" />
+  <meta name="twitter:image"           content="${siteLogo}" />`,
     };
 
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>${safeName} — snake.rip</title>
+  <title>${safeName} — ${siteTitle}</title>
+  <meta name="description"        content="${siteDescription}" />
+  <link rel="icon"                href="${siteLogo}" type="image/svg+xml" />
   <meta property="og:title"       content="${safeName}" />
+  <meta property="og:description" content="${siteDescription}" />
   <meta property="og:url"         content="${safePage}" />
-  <meta property="og:site_name"   content="snake.rip" />
-  ${type ? metas[type] : ''}
+  <meta property="og:site_name"   content="${siteTitle}" />
+  <meta name="twitter:title"      content="${safeName}" />
+  <meta name="twitter:description"content="${siteDescription}" />
+  ${
+      type
+          ? metas[type]
+          : `
+  <meta property="og:type"            content="website" />
+  <meta property="og:image"           content="${siteLogo}" />
+  <meta property="og:image:alt"       content="${siteTitle} logo" />
+  <meta name="twitter:card"           content="summary" />
+  <meta name="twitter:image"          content="${siteLogo}" />`
+  }
 </head>
 <body>
   <script>window.location.replace("${safePage}")</script>
