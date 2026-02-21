@@ -120,6 +120,7 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
                         width: v.videoWidth,
                         height: v.videoHeight,
                     });
+                    v.play().catch(() => {});
                 }}
                 onTimeUpdate={() => {
                     const v = videoRef.current;

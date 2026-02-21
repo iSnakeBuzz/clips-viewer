@@ -55,9 +55,16 @@ export function AudioPlayer({ src }: AudioPlayerProps) {
             <audio
                 ref={audioRef}
                 src={src}
+                autoPlay
                 onLoadedMetadata={() => {
                     const a = audioRef.current;
-                    if (a) setDuration(a.duration);
+                    if (a) {
+                        setDuration(a.duration);
+                        // Kick off playback once metadata is ready
+                        a.play()
+                            .then(() => setPlaying(true))
+                            .catch(() => {});
+                    }
                 }}
                 onTimeUpdate={() => {
                     const a = audioRef.current;
@@ -68,7 +75,11 @@ export function AudioPlayer({ src }: AudioPlayerProps) {
             />
 
             <div className='w-full flex flex-col gap-3.5'>
-                <ProgressBar current={currentTime} duration={duration} onSeek={handleSeek} />
+                <ProgressBar
+                    current={currentTime}
+                    duration={duration}
+                    onSeek={handleSeek}
+                />
 
                 <div className='flex items-center gap-3'>
                     <button
