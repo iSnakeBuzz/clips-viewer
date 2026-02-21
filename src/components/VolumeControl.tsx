@@ -1,4 +1,3 @@
-import { useRef, useState } from 'react';
 import { VolumeIcon } from './Icons';
 
 interface VolumeControlProps {
@@ -14,17 +13,6 @@ export function VolumeControl({
     onToggleMute,
     onVolumeChange,
 }: VolumeControlProps) {
-    const [show, setShow] = useState(false);
-    const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-    const reveal = () => {
-        clearTimeout(timer.current);
-        setShow(true);
-    };
-    const conceal = () => {
-        timer.current = setTimeout(() => setShow(false), 250);
-    };
-
     const handleSlider = (e: React.PointerEvent<HTMLDivElement>) => {
         e.preventDefault();
         const bar = e.currentTarget;
@@ -45,38 +33,33 @@ export function VolumeControl({
     const display = muted ? 0 : volume;
 
     return (
-        <div
-            className='flex items-center gap-1'
-            onMouseEnter={reveal}
-            onMouseLeave={conceal}
-        >
+        <div className='flex items-center gap-2'>
             <button
                 onClick={onToggleMute}
-                className='text-white/60 hover:text-white transition-colors duration-150 flex items-center p-1 cursor-pointer'
+                className='text-white/70 hover:text-white transition-colors duration-150 flex items-center p-1 cursor-pointer'
             >
                 <VolumeIcon level={volume} muted={muted} />
             </button>
 
             <div
-                className='overflow-hidden transition-all duration-200 ease-out'
-                style={{ width: show ? 52 : 0, opacity: show ? 1 : 0 }}
+                className='w-[112px] flex items-center py-1 cursor-pointer select-none'
+                onPointerDown={handleSlider}
             >
-                <div
-                    className='w-[52px] flex items-center py-2 cursor-pointer'
-                    onPointerDown={handleSlider}
-                >
+                <div className='relative w-full h-[4px] rounded-full bg-white/20'>
                     <div
-                        className='w-full h-[3px] rounded-full relative'
-                        style={{ background: 'rgba(255,255,255,0.2)' }}
-                    >
-                        <div
-                            className='h-full rounded-full'
-                            style={{
-                                width: `${display * 100}%`,
-                                background: 'rgba(255,255,255,0.8)',
-                            }}
-                        />
-                    </div>
+                        className='absolute inset-y-0 left-0 rounded-full'
+                        style={{
+                            width: `${display * 100}%`,
+                            background: 'rgba(255,255,255,0.75)',
+                        }}
+                    />
+                    <div
+                        className='pointer-events-none absolute top-1/2 h-3 w-3 rounded-full border border-white/60 bg-white shadow-[0_4px_10px_rgba(0,0,0,0.18)] transition-transform duration-150'
+                        style={{
+                            left: `${display * 100}%`,
+                            transform: 'translate(-50%, -50%)',
+                        }}
+                    />
                 </div>
             </div>
         </div>

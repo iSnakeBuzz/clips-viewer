@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { AudioPlayer } from './components/AudioPlayer';
-import {
-    CopyIcon,
-    DownloadIcon,
-    ExternalIcon,
-    CheckIcon,
-} from './components/Icons';
+import { CopyIcon, DownloadIcon, CheckIcon } from './components/Icons';
 import { VideoPlayer } from './components/VideoPlayer';
 import { formatDuration } from './utils/format';
 import { getType } from './utils/getType';
