@@ -1,0 +1,45 @@
+{
+    // $schema: "node_modules/wrangler/config-schema.json",
+    "name": "media-preview",
+    "main": "src/worker.ts",
+    "compatibility_date": "2025-01-01",
+    "compatibility_flags": ["nodejs_compat"],
+
+    "assets": {
+        "directory": "./dist",
+        "binding": "ASSETS",
+        // El Worker corre primero solo en rutas que matcheen extensiones de media.
+        // Todo lo demás (JS, CSS, favicon, etc.) va directo a los assets.
+        "run_worker_first": [
+            "/*.mp4",
+            "/*.mkv",
+            "/*.webm",
+            "/*.mov",
+            "/*.avi",
+            "/*.jpg",
+            "/*.jpeg",
+            "/*.png",
+            "/*.gif",
+            "/*.webp",
+            "/*.avif",
+            "/*.mp3",
+            "/*.ogg",
+            "/*.wav",
+            "/*.flac",
+            "/*.m4a",
+            // rutas nested también
+            "/*/*.mp4",
+            "/*/*.mkv",
+            "/*/*.webm",
+            "/*/*.mov",
+            "/*/*.jpg",
+            "/*/*.jpeg",
+            "/*/*.png",
+            "/*/*.gif",
+            "/*/*.webp",
+            "/*/*/*.mp4",
+            "/*/*/*.mkv",
+            "/*/*/*.webm",
+        ],
+    },
+}
