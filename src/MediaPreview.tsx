@@ -47,8 +47,61 @@ export default function MediaPreview() {
 
     return (
         <div className='min-h-screen bg-[#0d0d0d] text-white flex flex-col'>
-            {/* ── Media ── */}
-            <main className='flex-1 flex items-center justify-center p-6 pb-3'>
+            <main className='relative flex-1 flex items-center justify-center p-6 pb-20 md:pb-24'>
+                {/* Floating info/action pod */}
+                <div className='pointer-events-none absolute inset-x-0 bottom-4 flex justify-center md:bottom-6'>
+                    <div className='pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl bg-[rgba(255,255,255,0.06)] backdrop-blur-xl border border-white/10 shadow-[0_18px_40px_rgba(0,0,0,0.45)] max-w-3xl w-[90%] md:w-auto md:px-5 md:py-4'>
+                        <div className='min-w-0'>
+                            <p className='text-sm font-semibold text-white/90 truncate'>
+                                {filename}
+                            </p>
+                            {metaParts.length > 0 && (
+                                <p className='text-[11px] text-white/50 mt-0.5 tracking-wide truncate'>
+                                    {metaParts.join('  ·  ')}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className='flex-1' />
+
+                        <div className='flex items-center gap-2'>
+                            <button
+                                onClick={copy}
+                                title='Copy link'
+                                className={`flex items-center gap-1.5 text-[11px] font-medium px-3 py-2 rounded-xl transition-all duration-150 border border-white/10 bg-white/5 hover:bg-white/10 ${
+                                    copied
+                                        ? 'text-emerald-300 border-emerald-400/40'
+                                        : 'text-white/75'
+                                }`}
+                            >
+                                {copied ? <CheckIcon /> : <CopyIcon />}
+                                {copied ? 'Copied' : 'Copy'}
+                            </button>
+
+                            <a
+                                href={mediaUrl}
+                                target='_blank'
+                                rel='noreferrer'
+                                title='Open raw file'
+                                className='flex items-center gap-1.5 text-[11px] font-medium text-white/75 hover:text-white px-3 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-150'
+                            >
+                                <ExternalIcon />
+                                Raw
+                            </a>
+
+                            <a
+                                href={mediaUrl}
+                                download={filename}
+                                title='Download'
+                                className='flex items-center gap-1.5 text-[11px] font-semibold text-[#0d0d0d] bg-white hover:bg-white/90 px-3 py-2 rounded-xl transition-all duration-150 shadow-lg shadow-indigo-500/20'
+                            >
+                                <DownloadIcon />
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 {type === 'video' && (
                     <VideoPlayer src={mediaUrl} onMetadata={setVideoInfo} />
                 )}
@@ -57,7 +110,7 @@ export default function MediaPreview() {
                     <img
                         src={mediaUrl}
                         alt={filename}
-                        className='max-h-[80vh] max-w-full object-contain rounded-lg'
+                        className='max-h-[70vh] max-w-full object-contain rounded-xl shadow-[0_20px_55px_rgba(0,0,0,0.38)]'
                         onLoad={(e) => {
                             const img = e.currentTarget;
                             setImgSize({
@@ -76,56 +129,6 @@ export default function MediaPreview() {
                     </p>
                 )}
             </main>
-
-            {/* ── Bottom bar ── */}
-            <footer className='border-t border-white/6 px-5 py-3 flex items-center gap-4'>
-                <div className='flex-1 min-w-0'>
-                    <p className='text-sm font-medium text-white/75 truncate leading-snug'>
-                        {filename}
-                    </p>
-                    {metaParts.length > 0 && (
-                        <p className='text-[11px] text-white/25 mt-0.5 tracking-wide'>
-                            {metaParts.join('  ·  ')}
-                        </p>
-                    )}
-                </div>
-
-                <div className='flex items-center gap-0.5 shrink-0'>
-                    <button
-                        onClick={copy}
-                        title='Copy link'
-                        className={`flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1.5 rounded-md transition-all duration-150 cursor-pointer ${
-                            copied
-                                ? 'text-emerald-400 bg-emerald-400/10'
-                                : 'text-white/35 hover:text-white/65 hover:bg-white/6'
-                        }`}
-                    >
-                        {copied ? <CheckIcon /> : <CopyIcon />}
-                        {copied ? 'Copied' : 'Copy'}
-                    </button>
-
-                    <a
-                        href={mediaUrl}
-                        target='_blank'
-                        rel='noreferrer'
-                        title='Open raw file'
-                        className='flex items-center gap-1.5 text-[11px] font-medium text-white/35 hover:text-white/65 hover:bg-white/6 px-2.5 py-1.5 rounded-md transition-all duration-150 cursor-pointer'
-                    >
-                        <ExternalIcon />
-                        Raw
-                    </a>
-
-                    <a
-                        href={mediaUrl}
-                        download={filename}
-                        title='Download'
-                        className='flex items-center gap-1.5 text-[11px] font-semibold text-white bg-indigo-500 hover:bg-indigo-400 px-2.5 py-1.5 rounded-md transition-all duration-150 ml-1 cursor-pointer'
-                    >
-                        <DownloadIcon />
-                        Download
-                    </a>
-                </div>
-            </footer>
         </div>
     );
 }
