@@ -4,7 +4,12 @@
     "main": "src/worker.ts",
     "compatibility_date": "2025-01-01",
     "compatibility_flags": ["nodejs_compat"],
-
+    "routes": [
+        {
+            "pattern": "media.snake.rip",
+            "custom_domain": true,
+        },
+    ],
     "assets": {
         "directory": "./dist",
         "binding": "ASSETS",
