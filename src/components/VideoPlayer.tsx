@@ -25,7 +25,7 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
-    const [muted, setMuted] = useState(true);
+    const [muted, setMuted] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [controlsVisible, setControlsVisible] = useState(true);
 
@@ -69,12 +69,12 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
 
     const forceAutoplay = useCallback(() => {
         const v = videoRef.current;
-        if (!v || !muted) return;
-        v.muted = true;
-        v.defaultMuted = true;
+        if (!v) return;
+        v.muted = false;
+        v.defaultMuted = false;
         v.volume = sliderToGain(volume);
         v.play().catch(() => {});
-    }, [muted, sliderToGain, volume]);
+    }, [sliderToGain, volume]);
 
     useEffect(() => {
         const v = videoRef.current;
