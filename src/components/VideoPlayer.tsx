@@ -58,13 +58,12 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
 
     const forceAutoplay = useCallback(() => {
         const v = videoRef.current;
-        if (!v) return;
+        if (!v || !muted) return;
         v.muted = true;
         v.defaultMuted = true;
         v.volume = volume;
-        setMuted(true);
         v.play().catch(() => {});
-    }, [volume]);
+    }, [muted, volume]);
 
     useEffect(() => {
         const v = videoRef.current;
