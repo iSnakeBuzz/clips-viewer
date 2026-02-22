@@ -19,6 +19,8 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const MIN_DB = -50; // perceived-linear slider mapped to decibels
+
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -56,14 +58,23 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
             document.removeEventListener('fullscreenchange', onFsChange);
     }, []);
 
+    const sliderToGain = useCallback(
+        (value: number) => {
+            if (value <= 0) return 0;
+            const db = MIN_DB + value * (0 - MIN_DB);
+            return Math.pow(10, db / 20);
+        },
+        [MIN_DB],
+    );
+
     const forceAutoplay = useCallback(() => {
         const v = videoRef.current;
         if (!v || !muted) return;
         v.muted = true;
         v.defaultMuted = true;
-        v.volume = volume;
+        v.volume = sliderToGain(volume);
         v.play().catch(() => {});
-    }, [muted, volume]);
+    }, [muted, sliderToGain, volume]);
 
     useEffect(() => {
         const v = videoRef.current;
@@ -86,16 +97,20 @@ export function VideoPlayer({ src, onMetadata }: VideoPlayerProps) {
         if (v) v.currentTime = t;
     }, []);
 
-    const handleVolumeChange = useCallback((vol: number) => {
-        const v = videoRef.current;
-        if (!v) return;
-        v.volume = vol;
-        setVolume(vol);
-        if (vol > 0) {
-            v.muted = false;
-            setMuted(false);
-        }
-    }, []);
+    const handleVolumeChange = useCallback(
+        (vol: number) => {
+            const v = videoRef.current;
+            if (!v) return;
+            const gain = sliderToGain(vol);
+            v.volume = gain;
+            setVolume(vol);
+            if (vol > 0) {
+                v.muted = false;
+                setMuted(false);
+            }
+        },
+        [sliderToGain],
+    );
 
     const toggleMute = useCallback(() => {
         const v = videoRef.current;
